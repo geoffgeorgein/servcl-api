@@ -2,6 +2,7 @@ import express  from "express";
 
 import cors from "cors";
 import multer from "multer";
+import fs from "fs";
 
 const upload = multer({ dest: 'uploads/' })
 
@@ -20,9 +21,29 @@ app.get('/',async(req,res)=>{
 })
 
 app.post('/upload',upload.single('file'),(req,res)=>{
-    console.log("body",req.body);
+    // console.log("body",req.body);
     console.log("file",req.file);
-    res.status(200).json(req.file);
+    const {originalname,path}=req.file;
+    const parts=originalname.split('.');
+    const ext=parts[parts.length-1];
+    const newPath = path+'.'+ext;
+
+   
+    console.log("originalname",originalname)
+    fs.renameSync(path, newPath);
+    const name=req.file.filename;
+    console.log("name",name)
+    var npath = process.cwd();
+    console.log("npath",npath)
+    const data= fs.readFileSync('./uploads/'+name+'.txt','utf-8', (err, data) => { 
+      console.log("data",data); 
+
+   }) 
+    res.status(200).json(JSON.stringify(data));
+})
+
+app.get('/upload', async(req,res)=>{
+
 })
 
 
