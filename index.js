@@ -29,21 +29,24 @@ app.post('/upload',upload.single('file'),(req,res)=>{
     const newPath = path+'.'+ext;
 
    
-    console.log("originalname",originalname)
+    // console.log("originalname",originalname)
     fs.renameSync(path, newPath);
     const name=req.file.filename;
     console.log("name",name)
-    var npath = process.cwd();
-    console.log("npath",npath)
-    const data= fs.readFileSync('./uploads/'+name+'.txt','utf-8', (err, data) => { 
-      console.log("data",data); 
-
-   }) 
-    res.status(200).json(JSON.stringify(data));
+    // var npath = process.cwd();
+    // console.log("npath",npath)
+    // const data= fs.readFileSync('./uploads/'+name+'.txt','utf-8') 
+    res.status(200).json("uploaded");
 })
 
 app.get('/upload', async(req,res)=>{
-
+  var files  = fs.readdirSync('./uploads/');
+  var obj    = {};
+  obj.files  = files;
+  console.log(obj.files[0]);
+  const data= fs.readFileSync('./uploads/'+obj.files[0],'utf-8') 
+  // console.log('data: ',data);
+  res.json(JSON.stringify(data));
 })
 
 
